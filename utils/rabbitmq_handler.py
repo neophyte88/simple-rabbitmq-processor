@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pika
 from loguru import logger as log
 
@@ -22,10 +24,35 @@ class RabbitMQHandler:
         
     def send_message(self, message:str):
         
+        
+        message_timestamp = int(datetime.now().timestamp())
+        properties = pika.BasicProperties(timestamp= message_timestamp)
+        
         if self.debug:
-            log.debug(f"Sending message: {message}")
+            log.debug(f"Sending message: {message} | Timestamp: {message_timestamp}")
             
-        self.channel.basic_publish(exchange='', routing_key=self.rmq_queue_name, body=message)
+        self.channel.basic_publish(
+            exchange='', 
+            routing_key=self.rmq_queue_name, 
+            body=message,
+            properties=properties
+        )
+        
+    def pull_message(self):
+            
+            method_frame, header_frame, body = self.channel.basic_get(queue=self.rmq_queue_name, auto_ack=False)
+            
+            print(f"Method Frame: {method_frame, header_frame, body}")
+            
+            if method_frame:
+                if self.debug:
+                    log.debug(f"Received message: {body}")
+                
+                self.channel.basic_ack(delivery_tag=method_frame.delivery_tag)    
+                return {"message": body, "header": header_frame}
+            
+            
+            return {"message":"No Messages_available"}
         
     
         

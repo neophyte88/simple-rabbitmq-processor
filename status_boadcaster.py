@@ -13,7 +13,7 @@ DEBUG = "-d" in sys.argv
 
 class StatusBroadcaster:
     
-    def __init__(self, user, password, host, port, queue_name, debug) -> None:
+    def __init__(self, user, password, host, port, queue_name, debug=False) -> None:
         
         self.debug = debug
         self.rabbitmq_handler = RabbitMQHandler(user, password, host, port, queue_name, self.debug)
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     user = env.get("RABBIT_MQ_USER")
     password = env.get("RABBIT_MQ_PASSWORD")
     host = env.get("RABBIT_MQ_HOST")
-    port = env.get("RABBIT_MQ_PORT")
+    port = env.get("RABBIT_MQ_PORT", 5672)
     queue_name = env.get("RABBIT_MQ_QUEUE_NAME")
     
     status_broadcaster = StatusBroadcaster(user, password, host, port, queue_name, DEBUG)
