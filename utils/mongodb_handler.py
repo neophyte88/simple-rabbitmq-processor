@@ -30,7 +30,15 @@ class MongoDBHandler:
             self.collection = None
             
     def insert(self, data):
+        """Inserts one document into the collection
 
+        Args:
+            data (dict): data to insert
+
+        Returns:
+            result: result of the insert operation
+        """
+        
         result = self.collection.insert_one(data)
         log.debug(f"Inserted data: {result.inserted_id}")
         

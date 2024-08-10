@@ -47,7 +47,8 @@ Here are the respective files
 
 ## Flow
 
-1. The status broadcaster script when run will broadcast/publish one message with a random status value (0 to 6)per second to the Rabbit MQ Queue.
+1. The status broadcaster script when run will broadcast/publish one message with a random status value (0 to 6) 
+per second to the Rabbit MQ Queue.
    eg. `{"status": 3}`
    
 2. The message_processor script when executed, will start fetching and commiting messages from the queue to the MongoDB collection with the timestamp of the message and waits 10 seconds if the queue is exhausted.

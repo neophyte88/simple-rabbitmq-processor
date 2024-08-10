@@ -41,7 +41,11 @@ class RabbitMQHandler:
         
         
     def send_message(self, message:str):
-        
+        """Sends a message to the RabbitMQ queue
+
+        Args:
+            message (str): message to attach
+        """
         
         message_timestamp = int(datetime.now().timestamp())
         properties = pika.BasicProperties(timestamp= message_timestamp)

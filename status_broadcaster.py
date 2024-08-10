@@ -21,7 +21,7 @@ class StatusBroadcaster:
         Broadcaster sends out status messages with a random status value (0-6) every second
 
         Args:
-            uuser (str): RabbitMQ username
+            user (str): RabbitMQ username
             password (str): RabbitMQ password
             host (str): RabbitMQ server host
             port (str): RabbitMQ server port

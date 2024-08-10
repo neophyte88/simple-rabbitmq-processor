@@ -41,7 +41,15 @@ async def get_status_counts(
     start_time: Annotated[datetime, Body()],
     end_time: Annotated[datetime, Body()],
     ):
-    
+    """Endpoint to get the status counts between the given time range
+
+    Args:
+        start_time (Annotated[datetime, Body): Start time for the query 
+        end_time (Annotated[datetime, Body): End time for the query
+
+    Returns:
+        _type_: dict: Status counts between the given time range
+    """
     aggregator_query = [{
         '$match': {
         'created_at': {

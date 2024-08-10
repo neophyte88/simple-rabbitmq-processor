@@ -5,6 +5,11 @@ from pydantic import BaseModel, Field
 
 
 class Status(BaseModel):
+    """Status Model class for validation
+
+    Args:
+        BaseModel (pydantic.BaseModel): pydantic model class
+    """
     
     id : str = Field(default_factory=uuid.uuid4, alias="_id")
     status : str
