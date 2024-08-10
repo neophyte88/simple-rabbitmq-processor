@@ -18,10 +18,17 @@ class MongoDBHandler:
         self.collection_name = collection_name
         self.debug = debug
         
-        self.client = MongoClient(self.uri)
-        self.db = self.client[self.db_name]
-        self.collection = self.db[self.collection_name]
-        
+        try:
+            self.client = MongoClient(self.uri)
+            self.db = self.client[self.db_name]
+            self.collection = self.db[self.collection_name]
+        except Exception as e:
+            
+            log.error(f"Error connecting to the database: {e}")
+            self.client = None
+            self.db = None
+            self.collection = None
+            
     def insert(self, data):
 
         result = self.collection.insert_one(data)

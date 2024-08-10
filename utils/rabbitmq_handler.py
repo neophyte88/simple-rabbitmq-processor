@@ -5,8 +5,6 @@ from loguru import logger as log
 
 class RabbitMQHandler:
     
-    
-    
     def __init__(self, user, password, host, port, queue_name, debug=False) -> None:
         """
         Handles the RabbitMQ Operations for sending and receiving messages
@@ -28,12 +26,19 @@ class RabbitMQHandler:
         self.debug = debug
         
         # Connection setup here
+        
         self.credential_object = pika.PlainCredentials(self.rmq_user, password)
         self.connection_params = pika.ConnectionParameters(host=self.rmq_host_name, port = port, credentials=self.credential_object)
-        self.connection = pika.BlockingConnection(self.connection_params)
-        self.channel = self.connection.channel()
         
-        self.channel.queue_declare(queue=self.rmq_queue_name, durable=True)
+        try:
+            self.connection = pika.BlockingConnection(self.connection_params)
+            self.channel = self.connection.channel()
+            self.channel.queue_declare(queue=self.rmq_queue_name, durable=True)
+        except Exception as e:
+            log.error(f"Error connecting to the RabbitMQ server: {e}")
+            self.connection = None
+            
+        
         
     def send_message(self, message:str):
         

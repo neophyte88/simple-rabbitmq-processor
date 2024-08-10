@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import time
+import signal
 from datetime import datetime
 
 from loguru import logger as log
@@ -33,8 +34,21 @@ class MessageProcessor:
         self.debug = debug
         self.rabbitmq_handler = RabbitMQHandler(user, password, host, port, queue_name, self.debug)
         self.mongodb_handler = MongoDBHandler(db_uri, db_name, collection_name, self.debug)
-        
     
+    def exit_handler(self, sign, frame):
+        log.info("Exiting properly")
+        
+        if self.rabbitmq_handler.channel.is_open:
+            self.rabbitmq_handler.channel.stop_consuming()  # Stop consuming messages
+        if self.rabbitmq_handler.connection.is_open:
+            self.rabbitmq_handler.connection.close()  # Close the connection
+            
+        if self.mongodb_handler.client is not None:
+            self.mongodb_handler.client.close()
+            
+        log.success("Exit sequence complete")
+        sys.exit(0)
+
     def fetch_message(self):
         
         rmq_message = self.rabbitmq_handler.pull_message()
@@ -80,6 +94,9 @@ class MessageProcessor:
         It will keep running till there are messages in the queue, if its empty we will wait 10 seconds and check again
         """
 
+        signal.signal(signal.SIGINT, self.exit_handler)
+        signal.signal(signal.SIGTERM, self.exit_handler)
+        signal.signal(signal.SIGQUIT, self.exit_handler)
         
         while True:
                 
@@ -106,7 +123,22 @@ if __name__ == "__main__":
     db_name = env.get("MONGO_DB_NAME")
     collection = env.get("MONGO_DB_COLLECTION_NAME")
     
-    processor = MessageProcessor(user, password, host, port, queue_name, db_url, db_name, collection, DEBUG)
+    try:
+        processor = MessageProcessor(user, password, host, port, queue_name, db_url, db_name, collection, DEBUG)
+        
+        if not processor.rabbitmq_handler.connection:
+            log.error("Error initializing RabbitMQ Handler")
+            exit(1)
+        if not processor.mongodb_handler.client:
+            log.error("Error initializing MongoDB Handler")
+            exit(1)
+            
+        processor.run_service()
     
+    except Exception as e:
+        log.error(f"Error initializing Message Processor: {e}")
+        exit(1)
     
-    processor.run_service()
+    except KeyboardInterrupt:
+        processor.exit_handler(None, None)
+        exit(0)
