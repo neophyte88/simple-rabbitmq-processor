@@ -9,13 +9,23 @@ from loguru import logger as log
 
 from utils.rabbitmq_handler import RabbitMQHandler
 
+#Debug flag to enable/disable debug logs
 DEBUG = "-d" in sys.argv
 
 class StatusBroadcaster:
-    """Broadcaster sends out status messages with a random status value (0-6) every second
-    """
     
     def __init__(self, user, password, host, port, queue_name, debug=False) -> None:
+        """
+        Broadcaster sends out status messages with a random status value (0-6) every second
+
+        Args:
+            uuser (str): RabbitMQ username
+            password (str): RabbitMQ password
+            host (str): RabbitMQ server host
+            port (str): RabbitMQ server port
+            queue_name (str): RabbitMQ queue name
+            debug (bool, optional): _description_. Defaults to False.
+        """
         
         self.debug = debug
         self.rabbitmq_handler = RabbitMQHandler(user, password, host, port, queue_name, self.debug)

@@ -1,12 +1,17 @@
-
 from loguru import logger as log
 from pymongo.mongo_client import MongoClient
 
 class MongoDBHandler:
-    """Class to handle all the mongodb connections and operations
-    """
     
     def __init__(self, uri, db_name, collection_name, debug=False) -> None:
+        """Class to handle all the mongodb connections and operations
+
+        Args:
+            uri (str): Connection URL for the MongoDB server instance to connect to
+            db_name (str): Database name to connect to
+            collection_name (str): Collection name to use for data operations
+            debug (bool, optional): Enable/Disable debug messages. Defaults to False.
+        """
         
         self.uri = uri
         self.db_name = db_name

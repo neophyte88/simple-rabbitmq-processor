@@ -5,10 +5,20 @@ from loguru import logger as log
 
 class RabbitMQHandler:
     
-    """Handles the RabbitMQ Operations for sending and receiving messages
-    """
+    
     
     def __init__(self, user, password, host, port, queue_name, debug=False) -> None:
+        """
+        Handles the RabbitMQ Operations for sending and receiving messages
+
+        Args:
+            user (str): RabbitMQ username
+            password (str): RabbitMQ password
+            host (str): RabbitMQ server host
+            port (str): RabbitMQ server port
+            queue_name (str): RabbitMQ queue name
+            debug (bool, optional): Enable/Disable debug messages. Defaults to False.
+        """
         
         self.rmq_user = user
         self.rmq_host_name = host

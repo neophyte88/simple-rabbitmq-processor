@@ -2,6 +2,16 @@
 
 This project was written as a submission for a coding task.
 
+1. MQTT Messaging Integration:
+        Implement MQTT messaging via RabbitMQ.
+        Emit MQTT messages every second with a "status" field containing a random value between 0 and 6.
+2. Message Processing:
+        Develop a server script to process incoming MQTT messages.
+        Store the processed messages in MongoDB.
+3. Data Retrieval Endpoint:
+        Create an endpoint to accept start and end times.
+        Return the count of each status within the specified time range using MongoDB's aggregate pipeline.
+
 ## Setup Instructions
 
 #### Requirements:
@@ -9,7 +19,7 @@ This project was written as a submission for a coding task.
 The following need to be in place before starting the setup
 
 `Python : 3.10.12`
-`Rabbit : 3.13.6`
+`RabbitMQ : 3.13.6`
 `Erlang : 26.x`
 
 
@@ -37,9 +47,10 @@ Here are the respective files
 
 ## Flow
 
-1. The status broadcaster script when run will broadcast/publish one message per second to the Rabbit MQ Queue.
+1. The status broadcaster script when run will broadcast/publish one message with a random status value (0 to 6)per second to the Rabbit MQ Queue.
+   eg. `{"status": 3}`
    
-2. The message_processor script when run, will start fetching and commiting messages from the queue to the MongoDB collection with the timestamp of the message and waits 10 seconds if the queue is exhausted.
+2. The message_processor script when executed, will start fetching and commiting messages from the queue to the MongoDB collection with the timestamp of the message and waits 10 seconds if the queue is exhausted.
    
 3. The data endpoint is a FastAPI app that exposes a endpoint
    1. This endpoint accepts a post request with `start_time` and `end_time`
