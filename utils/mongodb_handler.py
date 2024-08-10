@@ -3,6 +3,8 @@ from loguru import logger as log
 from pymongo.mongo_client import MongoClient
 
 class MongoDBHandler:
+    """Class to handle all the mongodb connections and operations
+    """
     
     def __init__(self, uri, db_name, collection_name, debug=False) -> None:
         
@@ -16,7 +18,7 @@ class MongoDBHandler:
         self.collection = self.db[self.collection_name]
         
     def insert(self, data):
-        
+
         result = self.collection.insert_one(data)
         log.debug(f"Inserted data: {result.inserted_id}")
         

@@ -13,6 +13,8 @@ from utils.mongodb_handler import MongoDBHandler
 DEBUG = "-d" in sys.argv
 
 class MessageProcessor:
+    """Message processor class to handle pulling and processing of messages from rabbitmq to mongodb
+    """
     
     def __init__(self, user, password, host, port, queue_name, db_uri, db_name, collection_name,debug=False) -> None:
         

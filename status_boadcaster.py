@@ -12,6 +12,8 @@ from utils.rabbitmq_handler import RabbitMQHandler
 DEBUG = "-d" in sys.argv
 
 class StatusBroadcaster:
+    """Broadcaster sends out status messages with a random status value (0-6) every second
+    """
     
     def __init__(self, user, password, host, port, queue_name, debug=False) -> None:
         
